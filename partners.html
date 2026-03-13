@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners | TheMegaServer</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <style>
+        .partners-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at center, #0a0b2e 0%, #030416 100%);
+        }
+
+        /* Celestial Elements */
+        .stars-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); filter: blur(1px); }
+        }
+
+        /* Nexus Core */
+        .nexus-core {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 2;
+            filter: blur(20px);
+            opacity: 0.6;
+            animation: core-pulse 4s infinite alternate ease-in-out;
+        }
+
+        .core-inner {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 50px var(--accent-blue), 0 0 100px var(--accent-purple);
+            border: 2px solid var(--accent-blue);
+        }
+
+        @keyframes core-pulse {
+            from { transform: scale(0.9); opacity: 0.4; }
+            to { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .bubble-stage {
+            position: relative;
+            width: 1000px;
+            height: 1000px;
+            transform-style: preserve-3d;
+            z-index: 10;
+        }
+
+        .bubble {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(0, 242, 255, 0.05));
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 
+                inset 0 0 30px rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(0, 242, 255, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            padding: 10px;
+        }
+
+        .bubble span {
+            pointer-events: none;
+        }
+
+        .bubble::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 25px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.4);
+            filter: blur(6px);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+        }
+
+        .bubble:active {
+            cursor: grabbing;
+        }
+
+        .bubble:hover {
+            box-shadow: 0 0 60px rgba(0, 242, 255, 0.4);
+            border-color: var(--accent-blue);
+        }
+
+        .page-title {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .popped {
+            animation: pop 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(2); opacity: 0.5; border-width: 20px; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* Hover Reveal Info */
+        .bubble-info {
+            position: absolute;
+            bottom: -60px;
+            width: 200px;
+            background: rgba(3, 4, 22, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--accent-blue);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: var(--text-muted);
+        }
+
+        .bubble:hover .bubble-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="mesh-bg"></div>
+    <div class="stars-container" id="stars"></div>
+    
+    <div id="custom-cursor">
+        <div class="cursor-inner"></div>
+        <div class="cursor-outer"></div>
+    </div>
+
+    <nav>
+        <div class="logo">TheMegaServer</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="partners.html">Partners</a>
+            <a href="investors.html">Investors</a>
+            <a href="legal.html">Legal</a>
+            <a href="apply.html">Apply</a>
+            <a href="directory.html">Directory</a>
+        </div>
+    </nav>
+
+    <div class="page-title">
+        <h1 class="title-outfit highlight-neon" style="font-size: 3.5rem;">Partner Galaxy</h1>
+        <p style="color: var(--text-muted); margin-top: 1rem;">Touch, drag, and pop to explore our deep space network.</p>
+    </div>
+
+    <div class="partners-container">
+        <div class="nexus-core">
+            <div class="core-inner"></div>
+        </div>
+        <div class="bubble-stage" id="bubble-stage"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        gsap.registerPlugin(Draggable);
+
+        const partners = [
+            { name: "Alpha Studios", desc: "Premium cinematic production" },
+            { name: "Neon Ventures", desc: "Next-gen tech scouting" },
+            { name: "Quantum Creative", desc: "AI-driven design systems" },
+            { name: "Flux Media", desc: "Viral momentum engine" },
+            { name: "Nova Network", desc: "Distributed creator nodes" },
+            { name: "Zenith Agency", desc: "Global talent management" },
+            { name: "Hyperion", desc: "Cloud rendering solutions" },
+            { name: "Vortex Labs", desc: "Experimental interactive UX" },
+            { name: "Aetherial", desc: "Immersive VR environments" },
+            { name: "Stellaris", desc: "Creator-first financial tools" },
+            { name: "Prime Pulse", desc: "Real-time attention data" },
+            { name: "Orbit Digital", desc: "SMM architecture specialists" },
+            { name: "Prism Media", desc: "Vibrant visual storytelling" },
+            { name: "Apex Labs", desc: "Performance optimization" },
+            { name: "Nexus One", desc: "Central hub integration" },
+            { name: "Void Design", desc: "Minimalist dark-mode expert" }
+        ];
+
+        const stage = document.getElementById('bubble-stage');
+        const starsContainer = document.getElementById('stars');
+        
+        // Create Stars
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createGalaxy() {
+            partners.forEach((partner, i) => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.innerHTML = `
+                    <span>${partner.name}</span>
+                    <div class="bubble-info">${partner.desc}</div>
+                `;
+                stage.appendChild(bubble);
+
+                const angle = (i / partners.length) * Math.PI * 2;
+                // Expanded radii to fill full screen
+                const radiusX = window.innerWidth * 0.4;
+                const radiusY = window.innerHeight * 0.35;
+                const radiusZ = 600;
+                
+                let isDragging = false;
+                let currentAngle = angle;
+                
+                // Add individual speed variation
+                const speed = 0.001 + Math.random() * 0.002;
+
+                gsap.set(bubble, {
+                    xPercent: -50,
+                    yPercent: -50,
+                    x: Math.cos(angle) * radiusX,
+                    z: Math.sin(angle) * radiusZ,
+                    y: Math.sin(i * 3) * radiusY
+                });
+
+                // Interaction Sync
+                const drag = Draggable.create(bubble, {
+                    type: "x,y",
+                    onDragStart: function() { 
+                        isDragging = true;
+                        gsap.set(this.target, { zIndex: 1000, filter: 'blur(0px) saturate(200%)', opacity: 1 }); 
+                    },
+                    onDragEnd: function() { 
+                        isDragging = false; 
+                    },
+                    onPress: () => { gsap.to(bubble, { scale: 1.2, duration: 0.2 }); },
+                    onRelease: () => { gsap.to(bubble, { scale: 1, duration: 0.2 }); }
+                })[0];
+
+                // Global Orbit Animation
+                gsap.ticker.add(() => {
+                    if (!isDragging) {
+                        currentAngle += speed;
+                        const x = Math.cos(currentAngle) * radiusX;
+                        const z = Math.sin(currentAngle) * radiusZ;
+                        const y = Math.sin(currentAngle * 0.5 + i * 2) * radiusY;
+
+                        // Scale and effects based on Z depth
+                        const scale = gsap.utils.mapRange(-radiusZ, radiusZ, 0.5, 1.6, z);
+                        const opacity = gsap.utils.mapRange(-radiusZ, radiusZ, 0.3, 1, z);
+                        const blur = gsap.utils.mapRange(-radiusZ, radiusZ, 8, 0, z);
+
+                        gsap.set(bubble, {
+                            x: x,
+                            z: z,
+                            y: y,
+                            scale: scale,
+                            opacity: opacity,
+                            filter: `blur(${blur}px) saturate(150%)`,
+                            zIndex: Math.floor(z + radiusZ)
+                        });
+                    }
+                });
+
+                bubble.addEventListener('dblclick', (e) => {
+                    bubble.classList.add('popped');
+                    if (window.createParticles) window.createParticles(e.clientX, e.clientY);
+                    setTimeout(() => bubble.remove(), 400);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createGalaxy();
+        });
+    </script>
+</body>
+</html>

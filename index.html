@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheMegaServer | Future of Creator Networks</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+    <style>
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 100;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #ufo-container {
+            position: fixed;
+            width: 180px;
+            height: 100px;
+            z-index: 1000;
+            pointer-events: none;
+            filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.4));
+        }
+
+        /* Premium CSS UFO */
+        #ufo-visual {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ufo-top {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 40px;
+            background: rgba(0, 242, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50px 50px 0 0;
+            z-index: 2;
+        }
+
+        .ufo-body {
+            position: absolute;
+            bottom: 20px;
+            width: 180px;
+            height: 45px;
+            background: linear-gradient(180deg, #2a2a4a, #1a1a2e);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .ufo-light-row {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 3;
+        }
+
+        .ufo-light {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-blue);
+            animation: pulse-light 1s infinite alternate;
+        }
+
+        @keyframes pulse-light {
+            from { opacity: 0.3; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+
+        .destruction-btn {
+            position: relative;
+            z-index: 2000; /* Extremely high priority */
+            background: linear-gradient(135deg, #ff3e3e, #ff00bd);
+            color: white;
+            border: none;
+            padding: 1.5rem 3.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255, 0, 189, 0.4), inset 0 0 20px rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            opacity: 1; /* Explicitly visible */
+            margin: 2rem auto 0;
+            visibility: visible;
+        }
+
+        .destruction-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 50px rgba(255, 0, 189, 0.7);
+            animation: tremor 0.1s infinite alternate;
+        }
+
+        @keyframes tremor {
+            from { transform: scale(1.1) translate(-2px, -2px); }
+            to { transform: scale(1.1) translate(2px, 2px); }
+        }
+
+        .destruction-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120%; height: 180%;
+            background: rgba(255, 0, 189, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: -1;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        .destruction-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Glass decorative blobs */
+        .glass-blob {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(50px);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div id="mesh-bg"></div>
+    <div id="custom-cursor">
+        <div class="cursor-inner"></div>
+        <div class="cursor-outer"></div>
+    </div>
+
+    <nav>
+        <div class="logo">TheMegaServer</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="partners.html">Partners</a>
+            <a href="investors.html">Investors</a>
+            <a href="legal.html">Legal</a>
+            <a href="apply.html">Apply</a>
+            <a href="directory.html">Directory</a>
+        </div>
+    </nav>
+
+    <div id="ufo-container">
+        <div id="ufo-visual">
+            <div class="ufo-top"></div>
+            <div class="ufo-body"></div>
+            <div class="ufo-light-row">
+                <div class="ufo-light"></div>
+                <div class="ufo-light" style="animation-delay: 0.3s"></div>
+                <div class="ufo-light" style="animation-delay: 0.6s"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="glass-blob" style="top: -100px; left: -100px;"></div>
+                <h1 class="title-outfit">The Future <br><span class="highlight-neon">Transformed.</span></h1>
+                <p>Enter the realm where marketing meets entertainment—a creator network built for the next dimension of engagement.</p>
+                <div class="glass-card" style="display: inline-block; padding: 1.5rem 2rem;">
+                    <button class="destruction-btn" id="big-red-button">Initialize Overload</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        gsap.registerPlugin(CustomEase);
+
+        // UFO Advanced Animation
+        const ufo = document.getElementById('ufo-container');
+        function animateUFO() {
+            gsap.set(ufo, { x: -200, y: 300 });
+            
+            const mainTl = gsap.timeline({ repeat: -1 });
+            mainTl.to(ufo, {
+                duration: 20,
+                x: window.innerWidth + 200,
+                ease: "none",
+                onUpdate: function() {
+                    const prog = this.progress();
+                    const yPos = 300 + Math.sin(prog * 15) * 80;
+                    gsap.set(ufo, { y: yPos, rotation: Math.sin(prog * 15) * 10 });
+                }
+            });
+        }
+
+        // Destruction Sequence 2.0
+        const btn = document.getElementById('big-red-button');
+        btn.addEventListener('click', () => {
+            const tl = gsap.timeline();
+            const elements = document.querySelectorAll('.hero-content > h1, .hero-content > p, .glass-card, nav, .glass-blob');
+
+            document.body.classList.add('glitch-active');
+
+            // UFO Targets elements individually
+            elements.forEach((el, i) => {
+                const rect = el.getBoundingClientRect();
+                tl.to(ufo, {
+                    x: rect.left + rect.width/2,
+                    y: rect.top + rect.height/2,
+                    scale: 1.2,
+                    duration: 0.2,
+                    ease: "power2.out",
+                    onStart: () => {
+                        // "Blast" effect
+                        gsap.to(el, { filter: "brightness(5) blur(10px)", duration: 0.1 });
+                    }
+                })
+                .to(el, {
+                    x: gsap.utils.random(-400, 400),
+                    y: gsap.utils.random(-400, 400),
+                    rotation: gsap.utils.random(-90, 90),
+                    opacity: 0,
+                    scale: 0.5,
+                    duration: 0.4,
+                    ease: "power2.in"
+                }, "-=0.1");
+            });
+
+            tl.add(() => {
+                document.body.classList.remove('glitch-active');
+            }, "+=0.5")
+            .to(elements, {
+                duration: 1.5,
+                x: 0,
+                y: 0,
+                rotation: 0,
+                opacity: 1,
+                scale: 1,
+                filter: "brightness(1) blur(0px)",
+                stagger: 0.1,
+                ease: "expo.out",
+                delay: 1.5
+            })
+            .to(ufo, {
+                x: -200,
+                duration: 1,
+                ease: "power2.in",
+                onComplete: animateUFO
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            animateUFO();
+            // Ensure elements are visible immediately if GSAP fails
+            gsap.set(".hero-content > *", { opacity: 0, y: 30 });
+            
+            gsap.to(".hero-content > *", {
+                opacity: 1,
+                y: 0,
+                stagger: 0.15,
+                duration: 1.2,
+                ease: "expo.out",
+                clearProps: "all" // Removes GSAP styles after animation
+            });
+        });
+    </script>
+</body>
+</html>

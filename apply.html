@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply | TheMegaServer</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .apply-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 5% 50px;
+        }
+
+        #alien-container {
+            position: fixed;
+            bottom: 5%;
+            left: -200px;
+            width: 120px;
+            height: 150px;
+            z-index: 100;
+            filter: drop-shadow(0 0 20px rgba(188, 19, 254, 0.6));
+            pointer-events: none;
+        }
+
+        .alien-head {
+            width: 60px;
+            height: 50px;
+            background: var(--accent-purple);
+            border-radius: 50% 50% 40% 40%;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .alien-eye {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            top: 15px;
+        }
+
+        .alien-eye.left { left: 10px; }
+        .alien-eye.right { right: 10px; }
+
+        .alien-body {
+            width: 40px;
+            height: 60px;
+            background: var(--accent-purple);
+            border-radius: 20px;
+            margin: -5px auto 0;
+            opacity: 0.8;
+        }
+
+        .floating-pad {
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            width: 30px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+        }
+
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 3rem;
+        }
+
+        .requirement-note {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .requirement-note:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-blue);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.15);
+        }
+
+        .note-index {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .requirement-note h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .requirement-note p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 1rem;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .requirement-note:hover p {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="mesh-bg"></div>
+    <div id="custom-cursor">
+        <div class="cursor-inner"></div>
+        <div class="cursor-outer"></div>
+    </div>
+
+    <nav>
+        <div class="logo">TheMegaServer</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="partners.html">Partners</a>
+            <a href="investors.html">Investors</a>
+            <a href="legal.html">Legal</a>
+            <a href="apply.html">Apply</a>
+            <a href="directory.html">Directory</a>
+        </div>
+    </nav>
+
+    <div class="apply-container">
+        <h1 class="title-outfit highlight-neon" style="font-size: 4rem; text-align: center;">Join the <span style="color: #fff;">Network</span></h1>
+        <p style="color: var(--text-muted); text-align: center; max-width: 600px; margin-top: 1rem;">TheMegaServer is scouting for the bold. Review the sectors below and launch your trajectory towards us.</p>
+        
+        <div class="note-grid">
+            <div class="requirement-note">
+                <span class="note-index">01</span>
+                <h3 class="title-outfit">Audience Velocity</h3>
+                <p>We look for creators with high engagement momentum. Minimum 100k+ active community reach across your primary nodes.</p>
+            </div>
+            <div class="requirement-note">
+                <span class="note-index">02</span>
+                <h3 class="title-outfit">Visual Innovation</h3>
+                <p>Your content must feel alive. We prioritize creators who push the boundaries of visual effects and interactive storytelling.</p>
+            </div>
+            <div class="requirement-note">
+                <span class="note-index">03</span>
+                <h3 class="title-outfit">Nexus Synergy</h3>
+                <p>Collaborative spirit is mandatory. You must be prepared to interact with the UFO fleet and respect the dragon's hoard.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="alien-container">
+        <div class="floating-pad"></div>
+        <div class="alien-head">
+            <div class="alien-eye left"></div>
+            <div class="alien-eye right"></div>
+        </div>
+        <div class="alien-body"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        const alien = document.getElementById('alien-container');
+        
+        function runAlienCycle() {
+            gsap.set(alien, { x: -200 });
+            
+            const tl = gsap.timeline({ repeat: -1, repeatDelay: 5 });
+            tl.to(alien, {
+                x: window.innerWidth + 200,
+                duration: 10,
+                ease: "none",
+                onUpdate: () => {
+                   const y = Math.sin(Date.now() * 0.005) * 20;
+                   const rot = Math.sin(Date.now() * 0.01) * 10;
+                   gsap.set(alien, { y: y, rotation: rot });
+                   
+                   // Drop a notepad effect occasionally
+                   if (Math.random() > 0.98) {
+                       createNotepadDrop(gsap.getProperty(alien, "x"), y + (window.innerHeight * 0.8));
+                   }
+                }
+            });
+        }
+
+        function createNotepadDrop(x, y) {
+            const pad = document.createElement('div');
+            pad.className = 'floating-pad';
+            pad.style.left = x + 'px';
+            pad.style.top = y + 'px';
+            pad.style.position = 'fixed';
+            pad.style.zIndex = '90';
+            document.body.appendChild(pad);
+            
+            gsap.to(pad, {
+                y: y + 100,
+                opacity: 0,
+                duration: 2,
+                onComplete: () => pad.remove()
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            runAlienCycle();
+            gsap.from(".requirement-note", {
+                opacity: 0,
+                y: 30,
+                stagger: 0.2,
+                duration: 1.2,
+                ease: "expo.out"
+            });
+        });
+    </script>
+</body>
+</html>

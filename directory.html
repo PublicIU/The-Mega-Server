@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directory | TheMegaServer</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        .directory-wrap {
+            padding: 140px 5% 100px;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Holographic Grid Overlay */
+        .hologram-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .hologram-scan {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, 
+                transparent, 
+                rgba(0, 242, 255, 0.05) 50%, 
+                transparent 100%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .filter-nexus {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 5rem;
+            justify-content: center;
+        }
+
+        .filter-node {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            transition: all 0.4s ease;
+        }
+
+        .filter-node.active, .filter-node:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #000;
+            box-shadow: var(--neon-blue);
+        }
+
+        .entity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .node-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+            opacity: 0.3;
+        }
+
+        .node-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 242, 255, 0.2);
+        }
+
+        .node-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--accent-purple);
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .node-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .node-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="mesh-bg"></div>
+    <div class="hologram-grid"></div>
+    <div class="hologram-scan"></div>
+    <div id="custom-cursor">
+        <div class="cursor-inner"></div>
+        <div class="cursor-outer"></div>
+    </div>
+
+    <nav>
+        <div class="logo">TheMegaServer</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="partners.html">Partners</a>
+            <a href="investors.html">Investors</a>
+            <a href="legal.html">Legal</a>
+            <a href="apply.html">Apply</a>
+            <a href="directory.html">Directory</a>
+        </div>
+    </nav>
+
+    <div class="directory-wrap">
+        <h1 class="title-outfit highlight-neon" style="text-align: center; font-size: 4rem; margin-bottom: 1.5rem;">Access <span style="color: #fff;">Nexus</span></h1>
+        
+        <div class="filter-nexus">
+            <button class="filter-node active" data-filter="all">All Channels</button>
+            <button class="filter-node" data-filter="platform">Platforms</button>
+            <button class="filter-node" data-filter="tool">Tech Stack</button>
+            <button class="filter-node" data-filter="investor">Stakeholders</button>
+        </div>
+
+        <div class="entity-grid" id="node-grid"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        const nodes = [
+            { name: "MegaStream", type: "platform", desc: "Our core streaming infrastructure delivering 8K creative content globally." },
+            { name: "Pulse Analytics", type: "tool", desc: "Real-time attention tracking for viral creator campaigns." },
+            { name: "Sovereign Cap", type: "investor", desc: "Primary financial engine behind our network's geometric growth." },
+            { name: "Ether Frame", type: "tool", desc: "Decentralized rendering for VR/AR immersive creator assets." },
+            { name: "Social Nexus", type: "platform", desc: "Seamless cross-platform engagement integration." },
+            { name: "The Hoard", type: "investor", desc: "Elite dragon-guarded investment pool for high-impact projects." }
+        ];
+
+        const grid = document.getElementById('node-grid');
+        const filters = document.querySelectorAll('.filter-node');
+
+        function renderNodes(filterType = 'all') {
+            grid.innerHTML = '';
+            const filtered = filterType === 'all' ? nodes : nodes.filter(n => n.type === filterType);
+            
+            filtered.forEach(n => {
+                const card = document.createElement('div');
+                card.className = 'node-card';
+                card.innerHTML = `
+                    <span class="node-tag">${n.type}</span>
+                    <h3 class="title-outfit">${n.name}</h3>
+                    <p>${n.desc}</p>
+                `;
+                grid.appendChild(card);
+                
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 40,
+                    scale: 0.95,
+                    duration: 0.8,
+                    ease: "expo.out"
+                });
+            });
+        }
+
+        filters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filters.forEach(f => f.classList.remove('active'));
+                btn.classList.add('active');
+                renderNodes(btn.dataset.filter);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => renderNodes());
+    </script>
+</body>
+</html>
